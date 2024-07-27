@@ -3,17 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MenuItemResource\Pages;
-use App\Filament\Resources\MenuItemResource\RelationManagers;
 use App\Models\MenuItem;
-use Filament\Forms;
+use App\Models\Page;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MenuItemResource extends Resource
 {
@@ -25,9 +24,29 @@ class MenuItemResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')
-                    ->label('Titolo')
-                    ->required(),
+                Section::make('Dati generali')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('title')
+                            ->label('Titolo')
+                            ->required(),
+                        Select::make('link_type')
+                            ->label('Tipo di link')
+                            ->options([
+                                'internal' => 'Interno',
+                                'external' => 'Esterno',
+                            ]),
+                        Select::make('page_id')
+                            ->label('Pagina')
+                            ->nullable()
+                            ->options(
+                                Page::all()->pluck('title', 'id')->toArray()
+                            )
+                            ->required(),
+                        TextInput::make('external_link')
+                            ->label('Link esterno')
+                            ->required(),
+                    ]),
             ]);
     }
 

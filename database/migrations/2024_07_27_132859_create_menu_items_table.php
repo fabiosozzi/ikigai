@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('menu_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->treeColumns();
-            $table->timestamps();
             $table->string('link_type')->default('internal');
             $table->foreignUuid('page_id')->nullable()->constrained();
+            $table->string('external_link', 500)->nullable();
+            $table->timestamps();
         });
     }
 
